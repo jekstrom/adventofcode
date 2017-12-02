@@ -9,6 +9,17 @@ import Control.Monad
 -- output
 -- 18
 
+--part 2
+divisible xs = concat $ filter (\x -> length x > 1) $ fmap (\y -> filter (\x -> x `mod` y == 0)) xs <*> [xs]
+
+divide [] = 0
+divide (x:y:xs)
+    | x > y = x `div` y
+    | y > x = y `div` x
+
+sums' [] = 0
+sums' (x:xs) = (divide $ divisible x) + sums' xs
+
 -- [5,1,9,5] -> 8
 difference :: (Foldable t, Ord a, Num a) => t a -> a
 difference xs = maximum xs - minimum xs
@@ -39,5 +50,5 @@ main = do
     input <- return (args !! 0)
     contents <- readFile input
     let parsedInput = parseInput contents
-    let answer = sums parsedInput
+    let answer = sums' parsedInput
     print answer
